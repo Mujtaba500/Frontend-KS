@@ -1,10 +1,18 @@
 import AddTodo from "./AddTodo.jsx";
 import TodoList from "./TodoList.jsx";
 import { useState } from "react";
+import { useEffect } from "react";
 
 const Home = () => {
   const [todoList, setTodoList] = useState([]);
   const [id, setid] = useState(1);
+  useEffect(() => {
+    const todoList = JSON.parse(localStorage.getItem("todoList"));
+    if (!todoList) {
+      return;
+    }
+    setTodoList(todoList);
+  }, []);
   const addTodo = (todo) => {
     const todoWithId = {
       id: id,
@@ -12,10 +20,12 @@ const Home = () => {
     };
     const updatedTodoList = [...todoList, todoWithId];
     setTodoList(updatedTodoList);
+    localStorage.setItem("todoList", JSON.stringify(updatedTodoList));
     setid((prev) => prev + 1);
   };
   const updateTodoList = (todoList) => {
     setTodoList(todoList);
+    localStorage.setItem("todoList", JSON.stringify(todoList));
   };
   return (
     <>
