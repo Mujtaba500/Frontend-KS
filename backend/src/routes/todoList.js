@@ -8,4 +8,6 @@ todoRouter.get("/todo", todoController.getTodoList);
 
 todoRouter.post("/todo", todoController.createTodo);
 
+todoRouter.delete("/todo/:id", todoController.deleteTodo);
+
 export default todoRouter;

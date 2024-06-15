@@ -1,5 +1,4 @@
 import todoModel from "../../model/todoList.js";
-import { v4 as uuidv4 } from "uuid";
 
 const todoController = {
   getTodoList: async (req, res) => {
@@ -20,17 +19,40 @@ const todoController = {
 
   createTodo: async (req, res) => {
     try {
-      const payload = req.body;
-      const newId = uuidv4();
+      const payload = req.body.data;
       const newTodo = new todoModel();
       newTodo.name = payload.name;
-      newTodo.id = newId;
+      newTodo.id = payload.id;
       await newTodo.save();
       res.json({
         message: "Todo created",
       });
     } catch (err) {
       console.log("ERROR: ", err.message);
+      res.status(500).json({
+        message: "Internal server error",
+      });
+    }
+  },
+  deleteTodo: async (req, res) => {
+    try {
+      const id = req.params.id;
+      const todoTobedestroyed = await todoModel.findByPk(id);
+      if (!todoTobedestroyed) {
+        return res.status(404).json({
+          message: "Todo not found in dataBase",
+        });
+      }
+      await todoModel.destroy({
+        where: {
+          id: id,
+        },
+      });
+      res.json({
+        message: "Todo Deleted",
+      });
+    } catch (err) {
+      console.log("ERROR", err.message);
       res.status(500).json({
         message: "Internal server error",
       });

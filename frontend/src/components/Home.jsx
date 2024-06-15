@@ -3,10 +3,10 @@ import TodoList from "./TodoList.jsx";
 import { useState } from "react";
 import { useEffect } from "react";
 import axios from "axios";
+import { v4 as uuidv4 } from "uuid";
 
 const Home = () => {
   const [todoList, setTodoList] = useState([]);
-  const [id, setid] = useState(1);
 
   useEffect(() => {
     axios
@@ -22,18 +22,39 @@ const Home = () => {
         setTodoList(todoListDb);
       })
       .catch((err) => {
-        console.log(err.response.status);
-        console.log(err.response.data);
+        if (!err.response) {
+          console.log(err.message);
+        } else {
+          console.log(err.response.status);
+          console.log(err.response.data);
+        }
       });
   }, []);
+
   const addTodo = (todo) => {
     const todoWithId = {
-      id: id,
+      id: uuidv4(),
       name: todo,
     };
     const updatedTodoList = [...todoList, todoWithId];
     setTodoList(updatedTodoList);
-    setid((prev) => prev + 1);
+
+    //ADD IN DB
+    axios
+      .post("http://localhost:3000/todo", {
+        data: todoWithId,
+      })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        if (!err.response) {
+          console.log(err.message);
+        } else {
+          console.log(err.response.status);
+          console.log(err.response.data);
+        }
+      });
   };
   const updateTodoList = (todoList) => {
     setTodoList(todoList);
