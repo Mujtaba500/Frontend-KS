@@ -2,30 +2,41 @@ import AddTodo from "./AddTodo.jsx";
 import TodoList from "./TodoList.jsx";
 import { useState } from "react";
 import { useEffect } from "react";
+import axios from "axios";
 
 const Home = () => {
   const [todoList, setTodoList] = useState([]);
   const [id, setid] = useState(1);
+
   useEffect(() => {
-    const todoList = JSON.parse(localStorage.getItem("todoList"));
-    if (!todoList) {
-      return;
-    }
-    setTodoList(todoList);
+    axios
+      .get("http://localhost:3000/todo")
+      .then((res) => {
+        const data = res.data;
+        const todoListDb = data.map((todo) => {
+          return {
+            id: todo.id,
+            name: todo.name,
+          };
+        });
+        setTodoList(todoListDb);
+      })
+      .catch((err) => {
+        console.log(err.response.status);
+        console.log(err.response.data);
+      });
   }, []);
   const addTodo = (todo) => {
     const todoWithId = {
       id: id,
-      todo: todo,
+      name: todo,
     };
     const updatedTodoList = [...todoList, todoWithId];
     setTodoList(updatedTodoList);
-    localStorage.setItem("todoList", JSON.stringify(updatedTodoList));
     setid((prev) => prev + 1);
   };
   const updateTodoList = (todoList) => {
     setTodoList(todoList);
-    localStorage.setItem("todoList", JSON.stringify(todoList));
   };
   return (
     <>

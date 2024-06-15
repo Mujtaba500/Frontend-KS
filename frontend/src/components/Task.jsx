@@ -7,7 +7,7 @@ const Task = ({ todo, todoList, onDelete }) => {
   return (
     <div class="m-6">
       <input type="checkbox" />
-      <p class="inline text-2xl ml-2">{todo.todo}</p>
+      <p class="inline text-2xl ml-2">{todo.name}</p>
       <button
         id={todo.id}
         onClick={handleClick}
