@@ -16,6 +16,9 @@ const AddTodo = ({ onAdd }) => {
         id="todo"
         value={todo}
         onChange={handleChange}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") handleClick();
+        }}
         type="text"
         class="bg-white my-6 text-black"
       />
