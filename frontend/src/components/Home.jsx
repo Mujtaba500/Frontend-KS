@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from "uuid";
 const Home = () => {
   const [todoList, setTodoList] = useState([]);
 
+  //GET Todos from DB on page reload
   useEffect(() => {
     axios
       .get("http://localhost:3000/todo")
@@ -56,14 +57,34 @@ const Home = () => {
         }
       });
   };
-  const updateTodoList = (todoList) => {
-    setTodoList(todoList);
+
+  const deleteTodo = (idToDelete) => {
+    const newTodoList = todoList.filter((todo) => todo.id != idToDelete);
+
+    //DELETE FROM DB
+    axios
+      .delete(`http://localhost:3000/todo/${idToDelete}`)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((err) => {
+        if (!err.response) {
+          console.log(err.message);
+        } else {
+          console.log(err.response.status);
+          console.log(err.response.data);
+        }
+      });
+    setTodoList(newTodoList);
   };
+
+  const editTodo = (id, editedTodo) => {};
+
   return (
     <>
       <h1 class="text-5xl  my-6">Todo List</h1>
       <AddTodo onAdd={addTodo} />
-      <TodoList onDelete={updateTodoList} todoList={todoList} />
+      <TodoList onDelete={deleteTodo} onEdit={editTodo} todoList={todoList} />
     </>
   );
 };

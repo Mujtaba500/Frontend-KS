@@ -1,36 +1,35 @@
-import axios from "axios";
+// import axios from "axios";
+import { useState } from "react";
 
-const Task = ({ todo, todoList, onDelete }) => {
-  const handleClick = (e) => {
+const Task = ({ todo, onDelete, onEdit }) => {
+  const [showEdit, setShowEdit] = useState(false);
+  const handleDelete = (e) => {
     const idToDelete = e.target.id;
-    const newTodoList = todoList.filter((todo) => todo.id != idToDelete);
-    onDelete(newTodoList);
-
-    //DELETE FROM DB
-    axios
-      .delete(`http://localhost:3000/todo/${idToDelete}`)
-      .then((response) => {
-        console.log(response.data);
-      })
-      .catch((err) => {
-        if (!err.response) {
-          console.log(err.message);
-        } else {
-          console.log(err.response.status);
-          console.log(err.response.data);
-        }
-      });
+    onDelete(idToDelete);
   };
+
+  let content = <p class="inline text-2xl ml-2">{todo.name}</p>;
+
+  // if (showEdit) {
+  //   content = <EditTodo />;
+  // }
+
   return (
     <div class="m-6">
-      <input type="checkbox" />
-      <p class="inline text-2xl ml-2">{todo.name}</p>
+      {content}
       <button
         id={todo.id}
-        onClick={handleClick}
+        onClick={handleDelete}
         class="bg-red-500 rounded-full p-1 ml-3"
       >
         Delete
+      </button>
+      <button
+        id={todo.id}
+        // onClick={changeShowEdit}
+        class="bg-green-500 rounded-full p-1 ml-3"
+      >
+        Edit
       </button>
     </div>
   );
