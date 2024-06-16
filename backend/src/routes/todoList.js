@@ -10,4 +10,6 @@ todoRouter.post("/todo", todoController.createTodo);
 
 todoRouter.delete("/todo/:id", todoController.deleteTodo);
 
+todoRouter.put("/todo/:id", todoController.editTodo);
+
 export default todoRouter;

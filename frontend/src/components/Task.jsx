@@ -1,5 +1,6 @@
 // import axios from "axios";
 import { useState } from "react";
+import EditTodo from "./EditTodo.jsx";
 
 const Task = ({ todo, onDelete, onEdit }) => {
   const [showEdit, setShowEdit] = useState(false);
@@ -8,15 +9,18 @@ const Task = ({ todo, onDelete, onEdit }) => {
     onDelete(idToDelete);
   };
 
-  let content = <p class="inline text-2xl ml-2">{todo.name}</p>;
+  const handleEdit = (id, newTodo) => {
+    onEdit(id, newTodo);
+    changeShowEdit();
+  };
 
-  // if (showEdit) {
-  //   content = <EditTodo />;
-  // }
+  const changeShowEdit = () => {
+    setShowEdit(!showEdit);
+  };
 
-  return (
-    <div class="m-6">
-      {content}
+  let content = (
+    <div>
+      <p class="inline text-2xl ml-2">{todo.name}</p>
       <button
         id={todo.id}
         onClick={handleDelete}
@@ -26,13 +30,19 @@ const Task = ({ todo, onDelete, onEdit }) => {
       </button>
       <button
         id={todo.id}
-        // onClick={changeShowEdit}
-        class="bg-green-500 rounded-full p-1 ml-3"
+        onClick={changeShowEdit}
+        class="bg-blue-500 rounded-full p-1 ml-3"
       >
         Edit
       </button>
     </div>
   );
+
+  if (showEdit) {
+    content = <EditTodo onConfirm={handleEdit} id={todo.id} />;
+  }
+
+  return <div class="m-6">{content}</div>;
 };
 
 export default Task;

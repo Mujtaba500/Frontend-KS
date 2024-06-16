@@ -78,7 +78,34 @@ const Home = () => {
     setTodoList(newTodoList);
   };
 
-  const editTodo = (id, editedTodo) => {};
+  const editTodo = (id, newTodo) => {
+    const updatedTodoList = todoList.map((todo) => {
+      if (todo.id == id) {
+        return {
+          id: id,
+          name: newTodo,
+        };
+      } else {
+        return todo;
+      }
+    });
+    axios
+      .put(`http://localhost:3000/todo/${id}`, {
+        name: newTodo,
+      })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((err) => {
+        if (!err.response) {
+          console.log(err.message);
+        } else {
+          console.log(err.response.status);
+          console.log(err.response.data);
+        }
+      });
+    setTodoList(updatedTodoList);
+  };
 
   return (
     <>

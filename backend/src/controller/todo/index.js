@@ -34,6 +34,28 @@ const todoController = {
       });
     }
   },
+  editTodo: async (req, res) => {
+    try {
+      const id = req.params.id;
+      const newName = req.body.name;
+      const todoToUpdate = await todoModel.findByPk(id);
+      if (!todoToUpdate) {
+        res.status(404).json({
+          message: "Todo to be updated not found",
+        });
+      }
+      todoToUpdate.name = newName;
+      await todoToUpdate.save();
+      res.json({
+        message: "Todo successfully updated",
+      });
+    } catch (err) {
+      console.log("ERROR", err.message);
+      res.status(500).json({
+        message: "Internal server error",
+      });
+    }
+  },
   deleteTodo: async (req, res) => {
     try {
       const id = req.params.id;
